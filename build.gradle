@@ -1,0 +1,72 @@
+plugins {
+    id 'java-library'
+    id 'io.qameta.allure' version '2.11.2'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+ext {
+    allureVersion = '2.20.1'
+    junitVersion = '5.9.2'
+}
+
+allure {
+    report {
+        version.set("$allureVersion")
+    }
+    adapter {
+        aspectjWeaver.set(true)
+        frameworks {
+            junit5 {
+                adapterVersion.set("$allureVersion")
+            }
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
+compileJava {
+    options.encoding = "UTF-8"
+}
+
+compileTestJava {
+    options.encoding = "UTF-8"
+}
+
+dependencies {
+    testImplementation(
+            "org.junit.jupiter:junit-jupiter:${junitVersion}",
+            "io.qameta.allure:allure-selenide:${allureVersion}",
+            "org.aeonbits.owner:owner:1.0.12",
+            "io.rest-assured:rest-assured:5.3.0",
+            "io.qameta.allure:allure-rest-assured:${allureVersion}",
+            "com.fasterxml.jackson.core:jackson-core:2.14.1"
+    )
+
+    testRuntimeOnly(
+            "org.slf4j:slf4j-simple:2.0.5"
+    )
+
+    testCompileOnly (
+            "org.projectlombok:lombok:1.18.24"
+    )
+
+    testAnnotationProcessor (
+            "org.projectlombok:lombok:1.18.24"
+    )
+}
+
+test {
+    useJUnitPlatform()
+    systemProperties(System.getProperties())
+}
