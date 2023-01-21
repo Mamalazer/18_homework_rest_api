@@ -4,15 +4,19 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import reqres.data.models.*;
+import reqres.data.specs.Specifications;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.hasItem;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static reqres.config.Prop.PROP;
+import static reqres.data.Endpoints.LIST_USERS;
 import static reqres.steps.ReqresSteps.*;
 
 public class ReqresTest {
@@ -26,7 +30,7 @@ public class ReqresTest {
                 "Аватар не содержит id пользователя"));
 
         assertTrue(users.stream()
-                .allMatch(x -> x.getEmail().endsWith("reqres.in")),
+                        .allMatch(x -> x.getEmail().endsWith("reqres.in")),
                 "Email не заканчивается на reqres.in");
     }
 
@@ -100,5 +104,19 @@ public class ReqresTest {
         SingleUser singleUser = getUserById(2);
 
         Assertions.assertEquals(userData, singleUser.getData(), "Возвращён неверный user");
+    }
+
+    @Test
+    @DisplayName("Проверка аватара с помощью groovy")
+    public void checkAvatar() {
+
+        given()
+                .spec(Specifications.requestSpec())
+                .when().log().all()
+                .get(LIST_USERS)
+                .then().log().all()
+                .spec(Specifications.responseSpec200())
+                .body("data.findAll{it.avatar.startsWith('https://reqres.in')}.avatar.flatten()",
+                        hasItem("https://reqres.in/img/faces/12-image.jpg"));
     }
 }
