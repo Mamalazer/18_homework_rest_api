@@ -1,5 +1,6 @@
 package reqres.data.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,5 +16,6 @@ public class ListResource {
     private String name;
     private Integer year;
     private String color;
-    private String pantone_value;
+    @JsonProperty("pantone_value")
+    private String pantoneValue;
 }
