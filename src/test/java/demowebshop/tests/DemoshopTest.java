@@ -1,5 +1,6 @@
 package demowebshop.tests;
 
+import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -31,6 +32,7 @@ public class DemoshopTest {
         );
 
         given()
+                .filter(new AllureRestAssured())
                 .contentType("application/x-www-form-urlencoded; charset=UTF-8")
                 .cookie("NOPCOMMERCE.AUTH", cookieValue)
                 .formParams(body).log().all()
