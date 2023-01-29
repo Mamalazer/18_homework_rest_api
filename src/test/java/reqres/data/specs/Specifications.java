@@ -1,14 +1,13 @@
 package reqres.data.specs;
 
-import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
-import reqres.config.Prop;
 
+import static helpers.CustomApiListener.withCustomTemplates;
 import static reqres.config.Prop.PROP;
 
 public class Specifications {
@@ -17,7 +16,7 @@ public class Specifications {
         return new RequestSpecBuilder()
                 .setBaseUri(PROP.getBaseUrl())
                 .setContentType(ContentType.JSON)
-                .addFilter(new AllureRestAssured())
+                .addFilter(withCustomTemplates())
                 .build();
     }
 
